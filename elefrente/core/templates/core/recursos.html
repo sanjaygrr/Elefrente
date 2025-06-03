@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+{% block content %}
+    <h2>Recursos</h2>
+    <ul>
+        {% for recurso in recursos %}
+            <li>
+                <strong>{{ recurso.titulo }}</strong> ({{ recurso.nivel.nombre }} - {{ recurso.categoria.nombre }})<br>
+                {{ recurso.descripcion }}<br>
+                {% if recurso.enlace %}
+                    <a href="{{ recurso.enlace }}" target="_blank">Ver recurso</a>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>No hay recursos disponibles.</li>
+        {% endfor %}
+    </ul>
+{% endblock %} 

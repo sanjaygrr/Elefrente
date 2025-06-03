@@ -1,0 +1,584 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Quiénes Somos - Elefrente{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .about-hero {
+        background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+        padding: 6rem 2rem 4rem;
+        margin: -2rem -2rem 4rem -2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .about-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3C/g%3E%3C/svg%3E");
+        background-size: 100px 100px;
+        animation: slidePattern 20s linear infinite;
+    }
+
+    @keyframes slidePattern {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(100px, 100px); }
+    }
+
+    .about-hero h1 {
+        font-size: 4rem;
+        color: white;
+        font-weight: 900;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .about-hero p {
+        font-size: 1.4rem;
+        color: rgba(255,255,255,0.95);
+        max-width: 700px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+        animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mission Section */
+    .mission-section {
+        background: white;
+        padding: 4rem 2rem;
+        border-radius: 30px;
+        margin: 0 -2rem 4rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    }
+
+    .mission-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 3rem;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .mission-card {
+        text-align: center;
+        padding: 2rem;
+        position: relative;
+    }
+
+    .mission-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .mission-card:nth-child(2) .mission-icon {
+        animation-delay: 2s;
+    }
+
+    .mission-card:nth-child(3) .mission-icon {
+        animation-delay: 4s;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    .mission-icon::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: rgba(255,255,255,0.1);
+        transform: rotate(45deg);
+        animation: shine 3s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+        0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        50%, 100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .mission-card h3 {
+        font-size: 1.8rem;
+        color: #2D3436;
+        margin-bottom: 1rem;
+    }
+
+    .mission-card p {
+        color: #636E72;
+        line-height: 1.8;
+        font-size: 1.1rem;
+    }
+
+    /* Team Section */
+    .team-section {
+        padding: 4rem 0;
+    }
+
+    .team-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .team-header h2 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .team-header p {
+        font-size: 1.2rem;
+        color: #636E72;
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .team-member {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        transition: all 0.4s ease;
+        position: relative;
+    }
+
+    .team-member:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .member-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .team-member:hover .member-image {
+        transform: scale(1.1);
+    }
+
+    .member-info {
+        padding: 2rem;
+        position: relative;
+        background: white;
+    }
+
+    .member-info::before {
+        content: '';
+        position: absolute;
+        top: -30px;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: white;
+        border-radius: 30px 30px 0 0;
+    }
+
+    .member-name {
+        font-size: 1.5rem;
+        color: #2D3436;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .member-role {
+        color: #FF6B6B;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: inline-block;
+        padding: 0.3rem 1rem;
+        background: rgba(255,107,107,0.1);
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+
+    .member-description {
+        color: #636E72;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+    }
+
+    .member-social {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .social-link {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #F7F7F7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #636E72;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        transform: translateY(-3px);
+    }
+
+    /* No team members state */
+    .no-team {
+        text-align: center;
+        padding: 4rem;
+        background: #F7F7F7;
+        border-radius: 20px;
+        margin: 2rem auto;
+        max-width: 600px;
+    }
+
+    .no-team-icon {
+        font-size: 4rem;
+        color: #DFE6E9;
+        margin-bottom: 1rem;
+    }
+
+    .no-team p {
+        color: #636E72;
+        font-size: 1.2rem;
+    }
+
+    /* Values Section */
+    .values-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 4rem 2rem;
+        border-radius: 30px;
+        margin: 4rem -2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .values-section::before {
+        content: '¿?';
+        position: absolute;
+        top: -100px;
+        right: -50px;
+        font-size: 300px;
+        color: rgba(255,255,255,0.05);
+        font-weight: 900;
+        transform: rotate(15deg);
+    }
+
+    .values-header {
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .values-header h2 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        max-width: 1000px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .value-item {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: 20px;
+        border: 2px solid rgba(255,255,255,0.2);
+        text-align: center;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .value-item:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateY(-5px);
+    }
+
+    .value-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .value-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    /* CTA Section */
+    .join-cta {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: #F7F7F7;
+        border-radius: 30px;
+        margin: 4rem -2rem -4rem;
+    }
+
+    .join-cta h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #2D3436;
+    }
+
+    .join-cta p {
+        font-size: 1.2rem;
+        color: #636E72;
+        margin-bottom: 2rem;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .about-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .about-hero p {
+            font-size: 1.1rem;
+        }
+
+        .mission-section, .values-section, .join-cta {
+            margin-left: 0;
+            margin-right: 0;
+            border-radius: 0;
+        }
+
+        .team-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .values-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="about-hero">
+    <h1>Nuestra Misión</h1>
+    <p>Hacer que aprender español sea accesible, divertido y efectivo para todos, sin importar dónde estén o cuál sea su nivel.</p>
+</section>
+
+<!-- Mission Section -->
+<section class="mission-section">
+    <div class="mission-grid">
+        <div class="mission-card">
+            <div class="mission-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h3>Pasión</h3>
+            <p>Amamos el idioma español y queremos compartir esa pasión con el mundo, creando experiencias de aprendizaje memorables.</p>
+        </div>
+        
+        <div class="mission-card">
+            <div class="mission-icon">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <h3>Innovación</h3>
+            <p>Utilizamos las últimas tecnologías y metodologías pedagógicas para crear la mejor experiencia de aprendizaje posible.</p>
+        </div>
+        
+        <div class="mission-card">
+            <div class="mission-icon">
+                <i class="fas fa-globe-americas"></i>
+            </div>
+            <h3>Impacto Global</h3>
+            <p>Conectamos culturas y abrimos oportunidades a través del poder del idioma español en todo el mundo.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="team-section">
+    <div class="team-header">
+        <h2>Nuestro Equipo</h2>
+        <p>Las personas apasionadas detrás de Elefrente</p>
+    </div>
+    
+    <div class="team-grid">
+        {% for miembro in equipo %}
+            <div class="team-member">
+                {% if miembro.foto %}
+                    <img src="{{ miembro.foto.url }}" alt="{{ miembro.nombre }}" class="member-image">
+                {% else %}
+                    <div style="height: 300px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user" style="font-size: 4rem; color: white;"></i>
+                    </div>
+                {% endif %}
+                
+                <div class="member-info">
+                    <h3 class="member-name">{{ miembro.nombre }}</h3>
+                    {% if miembro.cargo %}
+                        <span class="member-role">{{ miembro.cargo }}</span>
+                    {% endif %}
+                    <p class="member-description">{{ miembro.descripcion }}</p>
+                    
+                    <div class="member-social">
+                        {% if miembro.red_social %}
+                            <a href="{{ miembro.red_social }}" target="_blank" class="social-link">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                        {% endif %}
+                        {% if miembro.twitter %}
+                            <a href="{{ miembro.twitter }}" target="_blank" class="social-link">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        {% endif %}
+                        {% if miembro.github %}
+                            <a href="{{ miembro.github }}" target="_blank" class="social-link">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="no-team">
+                <div class="no-team-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <p>Estamos construyendo nuestro equipo. ¡Pronto conocerás a las personas increíbles detrás de Elefrente!</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="values-section">
+    <div class="values-header">
+        <h2>Nuestros Valores</h2>
+        <p>Los principios que guían todo lo que hacemos</p>
+    </div>
+    
+    <div class="values-grid">
+        <div class="value-item">
+            <div class="value-icon">🎯</div>
+            <h3 class="value-title">Excelencia</h3>
+            <p>Siempre buscamos la mejor calidad en nuestro contenido</p>
+        </div>
+        
+        <div class="value-item">
+            <div class="value-icon">🤝</div>
+            <h3 class="value-title">Comunidad</h3>
+            <p>Fomentamos conexiones significativas entre estudiantes</p>
+        </div>
+        
+        <div class="value-item">
+            <div class="value-icon">🚀</div>
+            <h3 class="value-title">Progreso</h3>
+            <p>Celebramos cada paso en el viaje de aprendizaje</p>
+        </div>
+        
+        <div class="value-item">
+            <div class="value-icon">🌟</div>
+            <h3 class="value-title">Diversión</h3>
+            <p>El aprendizaje debe ser una experiencia alegre</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="join-cta">
+    <h2>¿Listo para unirte a nuestra comunidad?</h2>
+    <p>Miles de estudiantes ya están aprendiendo español con nosotros</p>
+    <div class="cta-buttons">
+        <a href="#" class="btn btn-primary">
+            <i class="fas fa-rocket"></i> Comienza Ahora
+        </a>
+        <a href="#" class="btn btn-outline">
+            <i class="fas fa-envelope"></i> Contáctanos
+        </a>
+    </div>
+</section>
+
+<script>
+    // Animate elements on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '0';
+                entry.target.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    entry.target.style.transition = 'all 0.6s ease-out';
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, 100);
+                
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe all animated elements
+    document.querySelectorAll('.mission-card, .team-member, .value-item').forEach(el => {
+        observer.observe(el);
+    });
+</script>
+{% endblock %}
