@@ -1,1 +1,1 @@
-web: gunicorn lodoro_analytics.wsgi --log-file -
+web: gunicorn elefrente.wsgi --log-file -
