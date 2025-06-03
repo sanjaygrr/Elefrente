@@ -408,7 +408,10 @@
                 <a href="{% url 'recursos' %}">Recursos</a>
                 <a href="{% url 'quienes_somos' %}">¿Quiénes somos?</a>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'logout' %}">Cerrar sesión</a>
+                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" style="background:none;border:none;color:#007bff;cursor:pointer;">Cerrar sesión</button>
+                    </form>
                 {% else %}
                     <a href="{% url 'login' %}">Iniciar sesión</a>
                 {% endif %}

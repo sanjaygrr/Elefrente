@@ -96,6 +96,7 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        cursor: pointer;
     }
 
     .btn-hero-primary {
@@ -416,6 +417,165 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Bienvenido a Elefrente</h2>
-    <p>Tu plataforma para aprender español.</p>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>Aprende <span>Español</span> de Forma Divertida</h1>
+            <p>Domina el español con lecciones interactivas, ejercicios prácticos y una comunidad global de estudiantes.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn-hero btn-hero-primary">
+                    <i class="fas fa-rocket"></i> Empieza Gratis
+                </a>
+                <a href="#" class="btn-hero btn-hero-secondary">
+                    <i class="fas fa-play-circle"></i> Ver Cursos
+                </a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hero-image-wrapper">
+                <div class="floating-card">
+                    <h3>¡Hola!</h3>
+                    <p>Lección 1: Saludos</p>
+                </div>
+                <div class="floating-card">
+                    <h3>A1 → B2</h3>
+                    <p>Progreso rápido</p>
+                </div>
+                <div class="floating-card">
+                    <h3>🎯 95%</h3>
+                    <p>Tasa de éxito</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <h2>¿Por qué Elefrente?</h2>
+    <p class="features-subtitle">La manera más efectiva y divertida de aprender español</p>
+    
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h3>Método Inteligente</h3>
+            <p>Algoritmos de aprendizaje adaptativo que se ajustan a tu ritmo y estilo de aprendizaje personal.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <h3>Gamificación</h3>
+            <p>Aprende jugando con puntos, niveles y desafíos que hacen el aprendizaje adictivo y divertido.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3>Comunidad Global</h3>
+            <p>Conecta con estudiantes de todo el mundo y practica con hablantes nativos en tiempo real.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h3>Aprende Donde Sea</h3>
+            <p>Accede a tus lecciones desde cualquier dispositivo y continúa tu progreso sin interrupciones.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-certificate"></i>
+            </div>
+            <h3>Certificados</h3>
+            <p>Obtén certificados reconocidos al completar cada nivel y demuestra tu dominio del español.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-headphones"></i>
+            </div>
+            <h3>Audio Nativo</h3>
+            <p>Mejora tu pronunciación con audio de hablantes nativos de diferentes países hispanohablantes.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+    <div class="stats-grid">
+        <div class="stat-item">
+            <span class="stat-number">50,000+</span>
+            <span class="stat-label">Estudiantes Activos</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">1,200+</span>
+            <span class="stat-label">Lecciones Interactivas</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">95%</span>
+            <span class="stat-label">Tasa de Satisfacción</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">30+</span>
+            <span class="stat-label">Países Alcanzados</span>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta">
+    <h2>¿Listo para hablar español?</h2>
+    <p>Únete a miles de estudiantes que ya están aprendiendo con Elefrente</p>
+    <a href="#" class="btn-hero btn-hero-primary">
+        <i class="fas fa-rocket"></i> Comienza Tu Aventura
+    </a>
+</section>
+
+<script>
+    // Animate numbers on scroll
+    const animateNumbers = () => {
+        const numbers = document.querySelectorAll('.stat-number');
+        
+        numbers.forEach(num => {
+            const text = num.innerText;
+            const finalNum = parseInt(text.replace(/[^0-9]/g, ''));
+            const suffix = text.includes('+') ? '+' : '';
+            const hasComma = text.includes(',');
+            
+            let currentNum = 0;
+            const increment = finalNum / 50;
+            const timer = setInterval(() => {
+                currentNum += increment;
+                if (currentNum >= finalNum) {
+                    num.innerText = hasComma ? finalNum.toLocaleString() + suffix : finalNum + suffix;
+                    clearInterval(timer);
+                } else {
+                    num.innerText = hasComma ? Math.floor(currentNum).toLocaleString() + suffix : Math.floor(currentNum) + suffix;
+                }
+            }, 30);
+        });
+    };
+
+    // Trigger animation when stats section is visible
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateNumbers();
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+
+    const statsSection = document.querySelector('.stats');
+    if (statsSection) {
+        observer.observe(statsSection);
+    }
+</script>
 {% endblock %}
