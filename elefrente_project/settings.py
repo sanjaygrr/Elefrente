@@ -27,7 +27,9 @@ SECRET_KEY = 'django-insecure-i^*r2%d8rqz5kht)8-mg-c8a28q+y%ms0y_^g6*(2wl#s-*n7*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Hosts permitidos
+# En producción, establece la variable de entorno DJANGO_ALLOWED_HOSTS con la lista separada por comas
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,web-production-15c8.up.railway.app").split(",")
 
 
 # Application definition
