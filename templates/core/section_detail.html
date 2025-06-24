@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ section.title }} | EleFrente{% endblock %}
+
+{% block content %}
+<h1>{{ section.title }}</h1>
+<p>{{ section.description }}</p>
+
+{% if section.image %}
+  <img src="{{ section.image.url }}" class="img-fluid mb-3" alt="{{ section.title }}">
+{% endif %}
+
+{% if section.video_url %}
+  <div class="ratio ratio-16x9 mb-3">
+    <iframe src="{{ section.video_url }}" title="Video" allowfullscreen></iframe>
+  </div>
+{% endif %}
+
+{% if section.resource %}
+  <a href="{{ section.resource.url }}" class="btn btn-secondary">Descargar recurso</a>
+{% endif %}
+{% endblock %} 

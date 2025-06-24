@@ -1,0 +1,1 @@
+web: gunicorn elefrente_project.wsgi --log-file - 

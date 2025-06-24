@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio | EleFrente{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Bienvenido a EleFrente</h1>
+<p class="lead">Selecciona un módulo para comenzar tu aprendizaje de español</p>
+
+<div class="d-flex flex-wrap gap-3">
+  {% for module in modules %}
+    <a href="{% url 'module_detail' module.pk %}" class="btn btn-primary">{{ module.name }}</a>
+  {% empty %}
+    <p>No hay módulos disponibles todavía.</p>
+  {% endfor %}
+</div>
+{% endblock %} 

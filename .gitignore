@@ -1,0 +1,42 @@
+# Entornos virtuales
+venv/
+ENV/
+env/
+
+# Compilados de Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+
+# Distribución / empaquetado
+build/
+dist/
+*.wheel
+
+# Archivos de registro
+*.log
+
+# Base de datos local
+*.sqlite3
+db.sqlite3
+
+# Archivos creados por Django
+staticfiles/
+media/
+
+# Variables de entorno / configuración
+.env
+*.env
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Directorios de IDE
+.vscode/
+.idea/ 
