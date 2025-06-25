@@ -35,6 +35,9 @@ DEBUG = True
 # En producción, establece la variable de entorno DJANGO_ALLOWED_HOSTS con la lista separada por comas
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,web-production-15c8.up.railway.app").split(",")
 
+# Dominios de confianza para las comprobaciones CSRF (incluye el esquema https://)
+CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "https://web-production-15c8.up.railway.app").split(",")
+
 
 # Application definition
 
