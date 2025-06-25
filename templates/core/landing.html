@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Bienvenido | EleFrente{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+  <h1 class="display-4 mb-3">Bienvenido a EleFrente</h1>
+  <p class="lead mb-4">Plataforma interactiva para aprender español con módulos adaptados a tu nivel.</p>
+  {% if user.is_authenticated %}
+    <a href="{% url 'modules' %}" class="btn btn-primary btn-lg">Ir a mis módulos</a>
+  {% else %}
+    <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Iniciar sesión</a>
+    <a href="{% url 'signup' %}" class="btn btn-outline-secondary btn-lg ms-2">Registrarme</a>
+  {% endif %}
+</div>
+{% endblock %} 

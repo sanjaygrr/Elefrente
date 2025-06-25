@@ -157,7 +157,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Redirecciones tras autenticación
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/modulos/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Configuración de Cloudinary para almacenamiento de medios
