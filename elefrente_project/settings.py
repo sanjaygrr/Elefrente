@@ -163,8 +163,8 @@ LOGOUT_REDIRECT_URL = '/'
 # Configuración de Cloudinary para almacenamiento de medios
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'deramtusb',
-    'API_KEY': 'vDIOHIJJp2qGSVEptIjcc-NdoV4',
-    'API_SECRET': 'AQUÍ_TU_API_SECRET_REAL',   # ← pega tu valor
+    'API_KEY': '326392767663283',
+    'API_SECRET': 'vDIOHIJJp2qGSVEptIjcc-NdoV4',   # ← pega tu valor
     'FOLDER': 'elefrente',
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
