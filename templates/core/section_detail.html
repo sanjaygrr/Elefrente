@@ -6,7 +6,15 @@
 <h1>{{ section.title }}</h1>
 <p>{{ section.description }}</p>
 
-{% if section.image %}
+{% if section.images.exists %}
+  <div class="row row-cols-1 row-cols-md-2 g-3 mb-3">
+    {% for img in section.images.all %}
+      <div class="col">
+        <img src="{{ img.image.url }}" class="img-fluid" alt="{{ section.title }} imagen {{ forloop.counter }}">
+      </div>
+    {% endfor %}
+  </div>
+{% elif section.image %}
   <img src="{{ section.image.url }}" class="img-fluid mb-3" alt="{{ section.title }}">
 {% endif %}
 

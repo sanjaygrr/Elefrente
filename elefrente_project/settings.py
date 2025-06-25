@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Apps del proyecto
     'core',
+    # Cloudinary
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -156,3 +159,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Redirecciones tras autenticación
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Configuración de Cloudinary para almacenamiento de medios
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', 'deramtusb'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY', 'vDIOHIJJp2qGSVEptIjcc-NdoV4'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', ''),
+    'FOLDER': 'elefrente',
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

@@ -30,3 +30,13 @@ class Section(models.Model):
 
     def __str__(self):
         return f"{self.module} - {self.title}"
+
+
+class SectionImage(models.Model):
+    """Imágenes adicionales para una sección."""
+
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to="sections/images/")
+
+    def __str__(self):
+        return f"{self.section.title} - Imagen {self.id}"
