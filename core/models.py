@@ -7,6 +7,7 @@ class Module(models.Model):
     """Representa un módulo de aprendizaje (A1, A2, B1, etc.)."""
 
     name = models.CharField(max_length=50, unique=True)
+    image = models.ImageField(upload_to="modules/images/", blank=True, null=True)
 
     class Meta:
         ordering = ["name"]
@@ -30,6 +31,16 @@ class Section(models.Model):
 
     def __str__(self):
         return f"{self.module} - {self.title}"
+
+    @property
+    def cover_image_url(self):
+        """Devuelve la URL de la imagen de portada: primera imagen adicional o la propia."""
+        first_image = self.images.first()
+        if first_image:
+            return first_image.image.url
+        if self.image:
+            return self.image.url
+        return ""
 
 
 class SectionImage(models.Model):

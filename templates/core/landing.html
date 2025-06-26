@@ -3,14 +3,558 @@
 {% block title %}Bienvenido | EleFrente{% endblock %}
 
 {% block content %}
-<div class="text-center py-5">
-  <h1 class="display-4 mb-3">Bienvenido a EleFrente</h1>
-  <p class="lead mb-4">Plataforma interactiva para aprender español con módulos adaptados a tu nivel.</p>
-  {% if user.is_authenticated %}
-    <a href="{% url 'modules' %}" class="btn btn-primary btn-lg">Ir a mis módulos</a>
-  {% else %}
-    <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Iniciar sesión</a>
-    <a href="{% url 'signup' %}" class="btn btn-outline-secondary btn-lg ms-2">Registrarme</a>
-  {% endif %}
+<style>
+    /* Hero Section */
+    .hero-wrapper {
+        margin: -2rem -12px 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+        overflow: hidden;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Animated Background */
+    .hero-bg-animation {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+    }
+
+    .floating-shape {
+        position: absolute;
+        opacity: 0.1;
+    }
+
+    .shape-1 {
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+        border-radius: 50%;
+        top: -200px;
+        right: -100px;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    .shape-2 {
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, transparent 70%);
+        border-radius: 50%;
+        bottom: -150px;
+        left: -100px;
+        animation: float 25s ease-in-out infinite reverse;
+    }
+
+    .shape-3 {
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+        border-radius: 50%;
+        top: 50%;
+        left: 10%;
+        animation: float 15s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+        33% { transform: translate(30px, -30px) scale(1.1) rotate(120deg); }
+        66% { transform: translate(-20px, 20px) scale(0.9) rotate(240deg); }
+    }
+
+    /* Hero Content */
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+        padding: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+        animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .welcome-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        animation: slideDown 0.8s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .welcome-badge i {
+        font-size: 1.2rem;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+    }
+
+    .hero-title {
+        font-size: 4rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+        line-height: 1.1;
+        animation: slideInLeft 0.8s ease;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .hero-title span {
+        background: linear-gradient(45deg, #fff 30%, #ffd700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+        animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+        0%, 100% { filter: brightness(1); }
+        50% { filter: brightness(1.3); }
+    }
+
+    .hero-subtitle {
+        font-size: 1.5rem;
+        opacity: 0.95;
+        margin-bottom: 3rem;
+        line-height: 1.6;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        animation: slideInRight 0.8s ease;
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* CTA Buttons */
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 3rem;
+        animation: fadeIn 1s ease 0.5s backwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .btn-hero {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-hero-primary {
+        background: white;
+        color: #6366f1;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .btn-hero-primary::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-hero-primary:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-hero-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        color: #6366f1;
+    }
+
+    .btn-hero-secondary {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-hero-secondary:hover {
+        background: white;
+        color: #6366f1;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(255,255,255,0.3);
+    }
+
+    /* Features Preview */
+    .features-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-top: 4rem;
+        animation: fadeInUp 1s ease 0.8s backwards;
+    }
+
+    .feature-item {
+        text-align: center;
+        animation: bounceIn 0.8s ease backwards;
+    }
+
+    .feature-item:nth-child(1) { animation-delay: 1s; }
+    .feature-item:nth-child(2) { animation-delay: 1.1s; }
+    .feature-item:nth-child(3) { animation-delay: 1.2s; }
+    .feature-item:nth-child(4) { animation-delay: 1.3s; }
+
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        70% {
+            transform: scale(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .feature-item:hover .feature-icon {
+        background: white;
+        color: #6366f1;
+        transform: rotate(-10deg) scale(1.1);
+    }
+
+    .feature-text {
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(-20px); }
+    }
+
+    .scroll-mouse {
+        width: 30px;
+        height: 50px;
+        border: 3px solid white;
+        border-radius: 25px;
+        position: relative;
+        opacity: 0.8;
+    }
+
+    .scroll-mouse::before {
+        content: '';
+        width: 6px;
+        height: 10px;
+        background: white;
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 3px;
+        animation: scrollWheel 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollWheel {
+        0% { top: 8px; opacity: 1; }
+        100% { top: 20px; opacity: 0; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-wrapper {
+            margin: -2rem -1rem 0;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+            width: 100%;
+            padding: 0 2rem;
+        }
+
+        .btn-hero {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .features-preview {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+    }
+
+    /* Particles Effect */
+    .particle {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        opacity: 0;
+        animation: particle 10s linear infinite;
+    }
+
+    @keyframes particle {
+        0% {
+            opacity: 0;
+            transform: translateY(100vh) scale(0);
+        }
+        10% {
+            opacity: 1;
+        }
+        90% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(-100vh) scale(1);
+        }
+    }
+
+    .particle-1 { width: 4px; height: 4px; left: 10%; animation-delay: 0s; }
+    .particle-2 { width: 6px; height: 6px; left: 30%; animation-delay: 2s; }
+    .particle-3 { width: 3px; height: 3px; left: 50%; animation-delay: 4s; }
+    .particle-4 { width: 5px; height: 5px; left: 70%; animation-delay: 6s; }
+    .particle-5 { width: 4px; height: 4px; left: 90%; animation-delay: 8s; }
+</style>
+
+<div class="hero-wrapper">
+    <!-- Animated Background -->
+    <div class="hero-bg-animation">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        <div class="particle particle-5"></div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="hero-content">
+        <div class="welcome-badge">
+            <i class="fas fa-sparkles"></i>
+            <span>Plataforma de Aprendizaje Interactivo</span>
+        </div>
+
+        <h1 class="hero-title">
+            Bienvenido a <span>EleFrente</span>
+        </h1>
+        
+        <p class="hero-subtitle">
+            Descubre una nueva forma de aprender español con módulos interactivos, 
+            ejercicios dinámicos y contenido adaptado a tu nivel
+        </p>
+
+        <div class="cta-buttons">
+            {% if user.is_authenticated %}
+                <a href="{% url 'modules' %}" class="btn-hero btn-hero-primary">
+                    <i class="fas fa-rocket"></i>
+                    Ir a mis módulos
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-hero btn-hero-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Iniciar sesión
+                </a>
+                <a href="{% url 'signup' %}" class="btn-hero btn-hero-secondary">
+                    <i class="fas fa-user-plus"></i>
+                    Crear cuenta gratis
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Features Preview -->
+        <div class="features-preview">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <p class="feature-text">Aprende a tu ritmo</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <p class="feature-text">Ejercicios interactivos</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <p class="feature-text">Sigue tu progreso</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <p class="feature-text">Gana recompensas</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+        <div class="scroll-mouse"></div>
+    </div>
 </div>
-{% endblock %} 
+
+<script>
+    // Generar más partículas dinámicamente
+    document.addEventListener('DOMContentLoaded', function() {
+        const bgAnimation = document.querySelector('.hero-bg-animation');
+        
+        // Crear partículas adicionales
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 6 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                bgAnimation.appendChild(particle);
+            }, i * 300);
+        }
+
+        // Efecto parallax suave en el scroll
+        let ticking = false;
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            const shapes = document.querySelectorAll('.floating-shape');
+            
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 0.5;
+                shape.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+            
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        });
+
+        // Animación de texto tipo máquina de escribir (opcional)
+        const title = document.querySelector('.hero-title span');
+        const text = title.textContent;
+        title.textContent = '';
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < text.length) {
+                title.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        
+        setTimeout(typeWriter, 800);
+    });
+</script>
+{% endblock %}

@@ -3,28 +3,579 @@
 {% block title %}{{ section.title }} | EleFrente{% endblock %}
 
 {% block content %}
-<h1>{{ section.title }}</h1>
-<p>{{ section.description }}</p>
+<style>
+    /* Hero Section */
+    .section-hero {
+        position: relative;
+        margin: -2rem -12px 3rem;
+        padding: 4rem 0 3rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        overflow: hidden;
+    }
 
-{% if section.images.exists %}
-  <div class="row row-cols-1 row-cols-md-2 g-3 mb-3">
-    {% for img in section.images.all %}
-      <div class="col">
-        <img src="{{ img.image.url }}" class="img-fluid" alt="{{ section.title }} imagen {{ forloop.counter }}">
-      </div>
-    {% endfor %}
-  </div>
-{% elif section.image %}
-  <img src="{{ section.image.url }}" class="img-fluid mb-3" alt="{{ section.title }}">
-{% endif %}
+    .section-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200"><path fill="rgba(255,255,255,0.1)" d="M0,100 C300,50 600,150 1200,100 L1200,200 L0,200 Z"/></svg>');
+        background-size: cover;
+        background-position: bottom;
+    }
 
-{% if section.video_url %}
-  <div class="ratio ratio-16x9 mb-3">
-    <iframe src="{{ section.video_url }}" title="Video" allowfullscreen></iframe>
-  </div>
-{% endif %}
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        animation: fadeInUp 0.8s ease;
+    }
 
-{% if section.resource %}
-  <a href="{{ section.resource.url }}" class="btn btn-secondary">Descargar recurso</a>
-{% endif %}
-{% endblock %} 
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .section-title {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .section-description {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+
+    .section-meta {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        opacity: 0.9;
+    }
+
+    .meta-item i {
+        font-size: 1.2rem;
+    }
+
+    /* Content Container */
+    .section-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    /* Cover Image */
+    .cover-image-container {
+        position: relative;
+        margin-bottom: 3rem;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        animation: scaleIn 0.8s ease;
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .cover-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    .cover-image-container:hover .cover-image {
+        transform: scale(1.05);
+    }
+
+    .image-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+        padding: 2rem;
+        color: white;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+
+    .cover-image-container:hover .image-overlay {
+        transform: translateY(0);
+    }
+
+    /* Image Gallery */
+    .gallery-section {
+        margin-bottom: 3rem;
+    }
+
+    .gallery-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .gallery-title i {
+        color: #6366f1;
+    }
+
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .image-card {
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: #f8fafc;
+        animation: fadeIn 0.6s ease backwards;
+    }
+
+    .image-card:nth-child(1) { animation-delay: 0.1s; }
+    .image-card:nth-child(2) { animation-delay: 0.2s; }
+    .image-card:nth-child(3) { animation-delay: 0.3s; }
+    .image-card:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .image-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .gallery-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .image-card:hover .gallery-image {
+        transform: scale(1.1);
+    }
+
+    .image-number {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255,255,255,0.9);
+        color: #6366f1;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Video Section */
+    .video-section {
+        margin-bottom: 3rem;
+    }
+
+    .video-container {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        background: #000;
+    }
+
+    .video-wrapper {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+    }
+
+    .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .video-controls {
+        background: white;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .video-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .video-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    /* Resource Download */
+    .resource-section {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .resource-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+        color: white;
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .resource-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+
+    .resource-description {
+        color: #64748b;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-download {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+        color: white;
+    }
+
+    .btn-download i {
+        font-size: 1.2rem;
+    }
+
+    /* Navigation */
+    .section-navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e5e7eb;
+    }
+
+    .nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        color: #64748b;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+        border-color: #6366f1;
+        color: #6366f1;
+        transform: translateX(-5px);
+    }
+
+    .nav-btn.next:hover {
+        transform: translateX(5px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .section-hero {
+            margin: -2rem -1rem 2rem;
+            padding: 3rem 0 2rem;
+        }
+
+        .image-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-navigation {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Loading skeleton */
+    @keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 1000px 100%;
+        animation: shimmer 2s infinite;
+        border-radius: 10px;
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="section-hero">
+    <div class="hero-content">
+        <h1 class="section-title">{{ section.title }}</h1>
+        <p class="section-description">{{ section.description }}</p>
+        <div class="section-meta">
+            <div class="meta-item">
+                <i class="fas fa-book-open"></i>
+                <span>Módulo {{ section.module.name|default:"" }}</span>
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                <span>15 min de lectura</span>
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-signal"></i>
+                <span>Nivel {{ section.level|default:"Intermedio" }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section-content">
+    <!-- Cover Image -->
+    {% if section.cover_image_url %}
+    <div class="cover-image-container">
+        <img src="{{ section.cover_image_url }}" class="cover-image" alt="{{ section.title }} portada">
+        <div class="image-overlay">
+            <h3>{{ section.title }}</h3>
+            <p>Imagen de portada</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Image Gallery -->
+    {% if section.images.count > 1 %}
+    <div class="gallery-section">
+        <h2 class="gallery-title">
+            <i class="fas fa-images"></i>
+            Galería de imágenes
+        </h2>
+        <div class="image-grid">
+            {% for img in section.images.all %}
+                {% if not forloop.first %}
+                <div class="image-card" onclick="openImageModal('{{ img.image.url }}')">
+                    <img src="{{ img.image.url }}" class="gallery-image" alt="{{ section.title }} imagen {{ forloop.counter }}">
+                    <span class="image-number">{{ forloop.counter0 }}</span>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Video Section -->
+    {% if section.video_url %}
+    <div class="video-section">
+        <h2 class="gallery-title">
+            <i class="fas fa-video"></i>
+            Video de la lección
+        </h2>
+        <div class="video-container">
+            <div class="video-wrapper">
+                <iframe src="{{ section.video_url }}" title="Video de {{ section.title }}" allowfullscreen></iframe>
+            </div>
+            <div class="video-controls">
+                <div class="video-info">
+                    <div class="video-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ section.title }}</h4>
+                        <p class="text-muted mb-0">Video explicativo</p>
+                    </div>
+                </div>
+                <button class="btn btn-outline-primary" onclick="toggleFullscreen()">
+                    <i class="fas fa-expand"></i> Pantalla completa
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Resource Download -->
+    {% if section.resource %}
+    <div class="resource-section">
+        <div class="resource-icon">
+            <i class="fas fa-download"></i>
+        </div>
+        <h3 class="resource-title">Material descargable</h3>
+        <p class="resource-description">
+            Descarga el material complementario para esta lección y practica offline
+        </p>
+        <a href="{{ section.resource.url }}" class="btn-download" download>
+            <i class="fas fa-file-download"></i>
+            Descargar recurso
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="section-navigation">
+        <a href="#" class="nav-btn">
+            <i class="fas fa-chevron-left"></i>
+            Lección anterior
+        </a>
+        <a href="#" class="nav-btn next">
+            Siguiente lección
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </div>
+</div>
+
+<!-- Image Modal (optional) -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <img src="" id="modalImage" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Función para abrir modal de imagen
+    function openImageModal(imageUrl) {
+        document.getElementById('modalImage').src = imageUrl;
+        const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+        modal.show();
+    }
+
+    // Función para pantalla completa del video
+    function toggleFullscreen() {
+        const iframe = document.querySelector('.video-wrapper iframe');
+        if (iframe.requestFullscreen) {
+            iframe.requestFullscreen();
+        } else if (iframe.webkitRequestFullscreen) {
+            iframe.webkitRequestFullscreen();
+        } else if (iframe.msRequestFullscreen) {
+            iframe.msRequestFullscreen();
+        }
+    }
+
+    // Animación de aparición al scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observar elementos
+    document.querySelectorAll('.gallery-section, .video-section, .resource-section').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'all 0.6s ease';
+        observer.observe(el);
+    });
+</script>
+{% endblock %}

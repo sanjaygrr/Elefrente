@@ -5,7 +5,7 @@ from .models import Module, Section, SectionImage
 
 @admin.register(Module)
 class ModuleAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = ("name", "image")
 
 class SectionImageInline(admin.TabularInline):
     model = SectionImage

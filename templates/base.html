@@ -3,51 +3,334 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}EleFrente{% endblock %}</title>
+    <title>{% block title %}EleFrente - Aprende Idiomas{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+        /* Variables de colores */
+        :root {
+            --color-primary: #6366f1;
+            --color-secondary: #ec4899;
+            --color-accent: #14b8a6;
+            --color-warning: #f59e0b;
+            --color-dark: #1e293b;
+            --color-light: #f8fafc;
+            --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --gradient-secondary: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar mejorado */
+        .navbar {
+            background-color: white !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            font-size: 1.8rem;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--color-dark) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: var(--color-light);
+            color: var(--color-primary) !important;
+        }
+
+        .navbar-nav .nav-link i {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Botón de módulos especial */
+        .btn-modules {
+            background: var(--gradient-primary);
+            color: white !important;
+            padding: 0.5rem 1.5rem !important;
+            border-radius: 2rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-modules:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Sección de usuario */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--color-light);
+            border-radius: 2rem;
+            color: var(--color-dark);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Botones de autenticación */
+        .btn-custom {
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 0 0.25rem;
+        }
+
+        .btn-login {
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            background: white;
+        }
+
+        .btn-login:hover {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-register {
+            background: var(--gradient-secondary);
+            color: white;
+            border: none;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+
+        .btn-logout {
+            background: var(--color-warning);
+            color: white;
+            border: none;
+        }
+
+        .btn-logout:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            margin-top: auto;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-light);
+            color: var(--color-primary);
+            border-radius: 50%;
+            margin: 0 0.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Contenido principal */
+        main {
+            flex: 1;
+            padding: 2rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .navbar-nav {
+                padding-top: 1rem;
+            }
+            
+            .navbar-nav .nav-link {
+                margin: 0.25rem 0;
+            }
+
+            .auth-buttons {
+                margin-top: 1rem;
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Animación de entrada */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navbar {
+            animation: fadeIn 0.5s ease;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'home' %}">EleFrente</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-graduation-cap"></i>
+                EleFrente
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">¿Quiénes somos?</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contáctanos</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">
+                            <i class="fas fa-home"></i>Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">
+                            <i class="fas fa-info-circle"></i>¿Quiénes somos?
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">
+                            <i class="fas fa-envelope"></i>Contáctanos
+                        </a>
+                    </li>
                     {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'modules' %}">Módulos</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link btn-modules" href="{% url 'modules' %}">
+                                <i class="fas fa-book"></i>Módulos
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
-                <ul class="navbar-nav">
+                
+                <div class="auth-buttons d-flex align-items-center">
                     {% if user.is_authenticated %}
-                        <li class="nav-item"><span class="navbar-text me-2">Hola, {{ user.username }}!</span></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Salir</a></li>
+                        <div class="user-info me-3">
+                            <div class="user-avatar">
+                                {{ user.username|first|upper }}
+                            </div>
+                            <span>¡Hola, {{ user.username }}!</span>
+                        </div>
+                        <a class="btn btn-custom btn-logout" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Salir
+                        </a>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Entrar</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Registrar</a></li>
+                        <a class="btn btn-custom btn-login" href="{% url 'login' %}">
+                            <i class="fas fa-sign-in-alt me-2"></i>Entrar
+                        </a>
+                        <a class="btn btn-custom btn-register" href="{% url 'signup' %}">
+                            <i class="fas fa-user-plus me-2"></i>Registrar
+                        </a>
                     {% endif %}
-                </ul>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="container py-4">
+    <main class="container">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-light py-3 mt-auto">
+    <footer class="py-4">
         <div class="container text-center">
-            <span class="text-muted">© 2024 EleFrente | Síguenos en</span>
-            <a href="#" class="ms-2">Facebook</a>
-            <a href="#" class="ms-2">Instagram</a>
-            <a href="#" class="ms-2">YouTube</a>
+            <p class="text-muted mb-3">© 2024 EleFrente - Aprende idiomas de forma divertida</p>
+            <div class="social-links">
+                <a href="#" title="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" title="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="#" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Efecto de scroll en el navbar
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+            } else {
+                navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.08)';
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Agregar clase activa al link actual
+        const currentLocation = location.pathname;
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            if(link.getAttribute('href') === currentLocation){
+                link.classList.add('active');
+                link.style.backgroundColor = 'var(--color-light)';
+                link.style.color = 'var(--color-primary)';
+            }
+        });
+    </script>
 </body>
-</html> 
+</html>

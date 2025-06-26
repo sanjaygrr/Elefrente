@@ -3,10 +3,491 @@
 {% block title %}Registro | EleFrente{% endblock %}
 
 {% block content %}
-<h1>Registro</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Crear cuenta</button>
-</form>
-{% endblock %} 
+<style>
+    /* Container principal */
+    .signup-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+    }
+
+    .signup-wrapper {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        max-width: 1000px;
+        width: 100%;
+        display: flex;
+        animation: slideUp 0.6s ease;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Lado izquierdo - Formulario */
+    .signup-form-section {
+        flex: 1;
+        padding: 3rem;
+        position: relative;
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .form-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .form-subtitle {
+        color: #64748b;
+        font-size: 1rem;
+    }
+
+    /* Estilos del formulario */
+    .signup-form {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #475569;
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        padding-left: 2.5rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: #f8fafc;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #6366f1;
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .form-icon {
+        position: absolute;
+        left: 1rem;
+        top: 2.6rem;
+        color: #94a3b8;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+    }
+
+    .form-control:focus ~ .form-icon {
+        color: #6366f1;
+    }
+
+    /* Mensajes de error */
+    .errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0.5rem 0 0 0;
+        color: #ef4444;
+        font-size: 0.85rem;
+    }
+
+    .errorlist li {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .errorlist li::before {
+        content: '⚠';
+        font-size: 1rem;
+    }
+
+    /* Help text */
+    .helptext {
+        display: block;
+        margin-top: 0.5rem;
+        color: #64748b;
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+
+    /* Botón de submit */
+    .btn-signup {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        margin-top: 2rem;
+    }
+
+    .btn-signup::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-signup:hover::before {
+        width: 600px;
+        height: 600px;
+    }
+
+    .btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Link de login */
+    .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #64748b;
+    }
+
+    .login-link a {
+        color: #6366f1;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .login-link a:hover {
+        color: #8b5cf6;
+        text-decoration: underline;
+    }
+
+    /* Lado derecho - Ilustración */
+    .signup-illustration {
+        flex: 1;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .illustration-content {
+        text-align: center;
+        z-index: 1;
+        position: relative;
+    }
+
+    .illustration-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        animation: fadeInRight 0.8s ease;
+    }
+
+    .illustration-text {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+        animation: fadeInRight 1s ease;
+    }
+
+    @keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Features list */
+    .features-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: left;
+    }
+
+    .features-list li {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        animation: fadeInRight 1.2s ease backwards;
+    }
+
+    .features-list li:nth-child(1) { animation-delay: 0.2s; }
+    .features-list li:nth-child(2) { animation-delay: 0.3s; }
+    .features-list li:nth-child(3) { animation-delay: 0.4s; }
+
+    .feature-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    /* Decorative elements */
+    .decoration-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        animation: float 20s ease-in-out infinite;
+    }
+
+    .circle-1 {
+        width: 200px;
+        height: 200px;
+        top: -100px;
+        right: -50px;
+    }
+
+    .circle-2 {
+        width: 150px;
+        height: 150px;
+        bottom: -75px;
+        left: -30px;
+        animation-duration: 15s;
+        animation-direction: reverse;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -30px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .signup-wrapper {
+            flex-direction: column;
+        }
+
+        .signup-illustration {
+            padding: 2rem;
+            min-height: 200px;
+        }
+
+        .illustration-title {
+            font-size: 1.5rem;
+        }
+
+        .features-list {
+            display: none;
+        }
+
+        .signup-form-section {
+            padding: 2rem;
+        }
+    }
+
+    /* Loading state */
+    .btn-signup:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .btn-signup.loading::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        margin: auto;
+        border: 2px solid transparent;
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease infinite;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="signup-container">
+    <div class="container">
+        <div class="signup-wrapper">
+            <!-- Formulario -->
+            <div class="signup-form-section">
+                <div class="form-header">
+                    <h1 class="form-title">Únete a EleFrente</h1>
+                    <p class="form-subtitle">Comienza tu viaje de aprendizaje hoy mismo</p>
+                </div>
+
+                <form method="post" class="signup-form" id="signupForm">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field|add_class:"form-control" }}
+                            
+                            {% if field.name == 'username' %}
+                                <i class="fas fa-user form-icon"></i>
+                            {% elif field.name == 'email' %}
+                                <i class="fas fa-envelope form-icon"></i>
+                            {% elif 'password' in field.name %}
+                                <i class="fas fa-lock form-icon"></i>
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                {{ field.errors }}
+                            {% endif %}
+                            
+                            {% if field.help_text %}
+                                <small class="helptext">{{ field.help_text|safe }}</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn-signup">
+                        <span class="btn-text">Crear mi cuenta</span>
+                    </button>
+                </form>
+
+                <div class="login-link">
+                    ¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a>
+                </div>
+            </div>
+
+            <!-- Ilustración -->
+            <div class="signup-illustration">
+                <div class="decoration-circle circle-1"></div>
+                <div class="decoration-circle circle-2"></div>
+                
+                <div class="illustration-content">
+                    <h2 class="illustration-title">¡Bienvenido!</h2>
+                    <p class="illustration-text">Únete a miles de estudiantes que están aprendiendo español de forma divertida</p>
+                    
+                    <ul class="features-list">
+                        <li>
+                            <div class="feature-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <span>Lecciones interactivas y personalizadas</span>
+                        </li>
+                        <li>
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <span>Seguimiento de tu progreso en tiempo real</span>
+                        </li>
+                        <li>
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <span>Comunidad de estudiantes activos</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Mejorar la experiencia del formulario
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('signupForm');
+        const submitBtn = form.querySelector('.btn-signup');
+        const btnText = submitBtn.querySelector('.btn-text');
+
+        // Agregar animación al enviar
+        form.addEventListener('submit', function(e) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            btnText.textContent = 'Creando tu cuenta...';
+        });
+
+        // Focus animation
+        const inputs = form.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // Password strength indicator (opcional)
+        const passwordInput = form.querySelector('input[type="password"]');
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                const strength = checkPasswordStrength(this.value);
+                // Aquí podrías agregar un indicador visual de fuerza
+            });
+        }
+    });
+
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (password.match(/[a-z]+/)) strength++;
+        if (password.match(/[A-Z]+/)) strength++;
+        if (password.match(/[0-9]+/)) strength++;
+        if (password.match(/[$@#&!]+/)) strength++;
+        return strength;
+    }
+</script>
+
+<!-- Note: Para que funcione el filtro add_class necesitas instalar django-widget-tweaks -->
+<!-- pip install django-widget-tweaks -->
+<!-- Y agregarlo a INSTALLED_APPS en settings.py -->
+{% endblock %}

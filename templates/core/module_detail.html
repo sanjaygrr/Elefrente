@@ -3,14 +3,621 @@
 {% block title %}{{ module.name }} | EleFrente{% endblock %}
 
 {% block content %}
-<h1>Módulo {{ module.name }}</h1>
-<p class="lead">Selecciona una sección</p>
+<style>
+    /* Module Hero */
+    .module-hero {
+        position: relative;
+        margin: -2rem -12px 3rem;
+        overflow: hidden;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
 
-<div class="list-group">
-  {% for section in module.sections.all %}
-    <a href="{% url 'section_detail' section.pk %}" class="list-group-item list-group-item-action">{{ section.title }}</a>
-  {% empty %}
-    <p>No hay secciones disponibles.</p>
-  {% endfor %}
+    .hero-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.3;
+        overflow: hidden;
+    }
+
+    .hero-background img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(8px);
+        transform: scale(1.1);
+    }
+
+    .hero-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/><circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/><circle cx="50" cy="50" r="20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></svg>');
+        background-size: 200px 200px;
+        animation: rotate 60s linear infinite;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 4rem 2rem;
+        text-align: center;
+        color: white;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .module-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255,255,255,0.2);
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        backdrop-filter: blur(10px);
+    }
+
+    .module-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .module-description {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        line-height: 1.6;
+    }
+
+    /* Module Stats */
+    .module-stats {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+
+    .stat-card {
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(10px);
+        padding: 1.5rem 2rem;
+        border-radius: 15px;
+        text-align: center;
+        min-width: 150px;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-3px);
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+        max-width: 800px;
+        margin: 3rem auto;
+        padding: 0 2rem;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .progress-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .progress-percentage {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #6366f1;
+    }
+
+    .progress-bar-wrapper {
+        background: #e5e7eb;
+        height: 12px;
+        border-radius: 50px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+        border-radius: 50px;
+        width: 35%;
+        transition: width 1s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    /* Sections List */
+    .sections-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .sections-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .sections-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+
+    .sections-subtitle {
+        color: #64748b;
+        font-size: 1.1rem;
+    }
+
+    .sections-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .section-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        text-decoration: none;
+        color: inherit;
+        animation: slideIn 0.5s ease backwards;
+    }
+
+    .section-card:nth-child(1) { animation-delay: 0.1s; }
+    .section-card:nth-child(2) { animation-delay: 0.2s; }
+    .section-card:nth-child(3) { animation-delay: 0.3s; }
+    .section-card:nth-child(4) { animation-delay: 0.4s; }
+    .section-card:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .section-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+        transform-origin: bottom;
+    }
+
+    .section-card:hover {
+        transform: translateX(10px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
+    }
+
+    .section-card:hover::before {
+        transform: scaleY(1);
+    }
+
+    .section-number {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #6366f1;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+
+    .section-card:hover .section-number {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        transform: rotate(-10deg);
+    }
+
+    .section-content {
+        flex: 1;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-description {
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 0.75rem;
+    }
+
+    .section-meta {
+        display: flex;
+        gap: 1.5rem;
+        font-size: 0.85rem;
+        color: #94a3b8;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .meta-item i {
+        color: #6366f1;
+    }
+
+    .section-status {
+        width: 35px;
+        height: 35px;
+        background: #f0fdf4;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #22c55e;
+        font-size: 1.2rem;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+
+    .section-status.locked {
+        background: #fef3c7;
+        color: #f59e0b;
+    }
+
+    .section-status.incomplete {
+        background: #f3f4f6;
+        color: #94a3b8;
+    }
+
+    /* Empty State */
+    .empty-sections {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: #f8fafc;
+        border-radius: 20px;
+        margin: 2rem 0;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: #e5e7eb;
+        margin-bottom: 1rem;
+    }
+
+    .empty-text {
+        color: #64748b;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Call to Action */
+    .cta-section {
+        text-align: center;
+        margin-top: 4rem;
+        padding: 3rem 2rem;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        border-radius: 20px;
+    }
+
+    .cta-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 1rem;
+    }
+
+    .btn-start {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-start:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+        color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .module-title {
+            font-size: 2.5rem;
+        }
+
+        .module-hero {
+            margin: -2rem -1rem 2rem;
+        }
+
+        .module-stats {
+            gap: 1rem;
+        }
+
+        .stat-card {
+            padding: 1rem;
+            min-width: 120px;
+        }
+
+        .section-card {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .section-meta {
+            justify-content: center;
+        }
+
+        .section-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+    }
+</style>
+
+<!-- Module Hero -->
+<div class="module-hero">
+    {% if module.image %}
+    <div class="hero-background">
+        <img src="{{ module.image.url }}" alt="{{ module.name }}">
+    </div>
+    {% endif %}
+    <div class="hero-pattern"></div>
+    
+    <div class="hero-content">
+        <div class="module-badge">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Módulo de Aprendizaje</span>
+        </div>
+        <h1 class="module-title">{{ module.name }}</h1>
+        <p class="module-description">
+            {{ module.description|default:"Explora este módulo completo para dominar nuevos conceptos y habilidades en español." }}
+        </p>
+        
+        <div class="module-stats">
+            <div class="stat-card">
+                <span class="stat-value">{{ module.sections.count }}</span>
+                <span class="stat-label">Secciones</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ module.duration|default:"45" }}</span>
+                <span class="stat-label">Minutos</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ module.exercises|default:"20" }}</span>
+                <span class="stat-label">Ejercicios</span>
+            </div>
+        </div>
+    </div>
 </div>
-{% endblock %} 
+
+<!-- Progress Bar -->
+<div class="progress-container">
+    <div class="progress-header">
+        <h3 class="progress-title">Tu progreso en este módulo</h3>
+        <span class="progress-percentage">35%</span>
+    </div>
+    <div class="progress-bar-wrapper">
+        <div class="progress-bar-fill"></div>
+    </div>
+</div>
+
+<!-- Sections List -->
+<div class="sections-container">
+    <div class="sections-header">
+        <h2 class="sections-title">Secciones del módulo</h2>
+        <p class="sections-subtitle">Completa cada sección para avanzar en tu aprendizaje</p>
+    </div>
+
+    {% if module.sections.all %}
+    <div class="sections-list">
+        {% for section in module.sections.all %}
+        <a href="{% url 'section_detail' section.pk %}" class="section-card">
+            <div class="section-number">
+                {{ forloop.counter }}
+            </div>
+            
+            <div class="section-content">
+                <h3 class="section-title">
+                    {{ section.title }}
+                    {% if section.is_premium %}
+                    <span class="badge bg-warning text-dark">Premium</span>
+                    {% endif %}
+                </h3>
+                <p class="section-description">
+                    {{ section.description|default:"Aprende conceptos importantes y practica con ejercicios interactivos." }}
+                </p>
+                <div class="section-meta">
+                    <span class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        {{ section.duration|default:"10" }} min
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-tasks"></i>
+                        {{ section.exercises|default:"5" }} ejercicios
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-signal"></i>
+                        {{ section.difficulty|default:"Intermedio" }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="section-status {% if section.is_locked %}locked{% elif section.is_completed %}completed{% else %}incomplete{% endif %}">
+                {% if section.is_locked %}
+                    <i class="fas fa-lock"></i>
+                {% elif section.is_completed %}
+                    <i class="fas fa-check"></i>
+                {% else %}
+                    <i class="fas fa-circle"></i>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-sections">
+        <div class="empty-icon">
+            <i class="fas fa-folder-open"></i>
+        </div>
+        <p class="empty-text">No hay secciones disponibles en este módulo todavía.</p>
+        <p class="text-muted">¡Pronto agregaremos contenido increíble!</p>
+    </div>
+    {% endif %}
+
+    <!-- Call to Action -->
+    <div class="cta-section">
+        <h3 class="cta-title">¿Listo para comenzar?</h3>
+        <p class="text-muted mb-3">Empieza con la primera sección y avanza a tu propio ritmo</p>
+        {% if module.sections.all %}
+        <a href="{% url 'section_detail' module.sections.first.pk %}" class="btn-start">
+            <i class="fas fa-play"></i>
+            Comenzar ahora
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Animación de la barra de progreso
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            const progressBar = document.querySelector('.progress-bar-fill');
+            if (progressBar) {
+                progressBar.style.width = '35%';
+            }
+        }, 500);
+    });
+
+    // Animación de números
+    const animateValue = (element, start, end, duration) => {
+        const range = end - start;
+        const increment = range / (duration / 16);
+        let current = start;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= end) {
+                current = end;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(current);
+        }, 16);
+    };
+
+    // Animar estadísticas cuando sean visibles
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const statValues = entry.target.querySelectorAll('.stat-value');
+                statValues.forEach(stat => {
+                    const value = parseInt(stat.textContent);
+                    stat.textContent = '0';
+                    animateValue(stat, 0, value, 1000);
+                });
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+
+    const moduleStats = document.querySelector('.module-stats');
+    if (moduleStats) {
+        observer.observe(moduleStats);
+    }
+</script>
+{% endblock %}
